@@ -1,8 +1,8 @@
-// src/components/Login.jsx
+// src/pages/Login.jsx
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
-
+import { useNavigate } from 'react-router-dom';
+import { setToken, isAuthenticated } from '../utils/auth.js'; // Utility to save token
 
 const Login = () => {
   const [username, setUsername] = useState('john@mail.com');
@@ -11,67 +11,55 @@ const Login = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    const token = sessionStorage.getItem('jwtToken');
-    if (token) {
-      navigate('/dashboard'); // Already logged in
+    console.log('Checking authentication...');
+    if (isAuthenticated()) { // Fix: Call the function isAuthenticated()
+      console.log('User is already logged in, redirecting...');
+      navigate('/dashboard'); // Redirect to dashboard if already logged in
     }
-  }, [navigate]);
-  
+  }, [navigate]); // Dependency is 'navigate' only
+
   const handleLogin = async (e) => {
     e.preventDefault();
 
     try {
-      // Simulate sending username and password to a backend API
-      const apiUrl = import.meta.env.VITE_API_URL;
-      
-      console.log(apiUrl); // should print your API URL
-
-      console.log('Login Function');
+      // Send login request to API
       const response = await axios.post(
         `${import.meta.env.VITE_API_URL}/auth/login`,
         {
-          email: username, // use "email" instead of "username"
+          email: username, // Use "email" instead of "username"
           password: password,
         },
-        {
-          headers: {
-            'Content-Type': 'application/json',
-          },
-        }
+        { headers: { 'Content-Type': 'application/json' } }
       );
-      console.log(response);
+      console.log(response.data);
+      // Save the JWT token to sessionStorage
+      setToken(response.data.access_token);
 
-      // If login is successful, save the JWT to sessionStorage
-      sessionStorage.setItem('jwtToken', response.data.access_token);
-
-      // Redirect to the dashboard
+      // Redirect to dashboard after successful login
       navigate('/dashboard');
     } catch (err) {
-      // john@mail.com,changeme
-      setError('Invalid credentials');
+      setError('Invalid credentials or server error');
     }
   };
 
   return (
-    <div className="login-container">
+    <div>
       <h2>Login</h2>
-      {error && <p className="error">{error}</p>}
+      {error && <p style={{ color: 'red' }}>{error}</p>}
       <form onSubmit={handleLogin}>
         <div>
-          <label htmlFor="username">Username:</label>
+          <label>Username:</label>
           <input
             type="text"
-            id="username"
             value={username}
             onChange={(e) => setUsername(e.target.value)}
             required
           />
         </div>
         <div>
-          <label htmlFor="password">Password:</label>
+          <label>Password:</label>
           <input
             type="password"
-            id="password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             required

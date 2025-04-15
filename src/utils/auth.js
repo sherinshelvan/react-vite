@@ -1,5 +1,15 @@
-// src/utils/auth.js
+export const getToken = () => {
+    return sessionStorage.getItem('jwtToken');
+};
+
+export const setToken = (token) => {
+    sessionStorage.setItem('jwtToken', token);
+};
+
 export const isAuthenticated = () => {
-    const token = sessionStorage.getItem('jwtToken');
-    return !!token; // returns true if token exists
+    return !!getToken();
+};
+
+export const logout = () => {
+    sessionStorage.removeItem('jwtToken');
 };

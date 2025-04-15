@@ -1,6 +1,6 @@
 // src/components/UserDetails.jsx
 import React, { useEffect, useState } from 'react';
-import axios from 'axios';
+import axios from '../../utils/axiosInstance';
 import { useParams, useNavigate } from 'react-router-dom';
 
 const UserDetails = () => {
@@ -24,7 +24,7 @@ const UserDetails = () => {
     };
 
     fetchUser();
-  }, [id, navigate]);
+  }, [id]);
 
   if (loading) return <div>Loading...</div>;
   if (error) return <div>{error}</div>;
