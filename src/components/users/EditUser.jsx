@@ -6,6 +6,8 @@ import { useParams, useNavigate } from 'react-router-dom';
 const EditUser = () => {
   const { id } = useParams(); // Get user ID from URL
   const navigate = useNavigate();
+  const [loading, setLoading] = useState(true);
+  const [disableButton, setDisableButton] = useState(false);
   const [user, setUser] = useState({ name: '', email: '', password: '', avatar: '' });
   const [error, setError] = useState('');
 
@@ -15,6 +17,7 @@ const EditUser = () => {
       try {
         const res = await axios.get(`${import.meta.env.VITE_API_URL}/users/${id}`);
         setUser({ ...res.data, password: '' }); // Don’t prefill password
+        setLoading(false);
       } catch (err) {
         setError('Failed to load user');
       }
@@ -25,7 +28,7 @@ const EditUser = () => {
 
   const handleUpdate = async (e) => {
     e.preventDefault();
-
+    setDisableButton(true);
     try {
       const res = await axios.put(`${import.meta.env.VITE_API_URL}/users/${id}`, user, {
         headers: {
@@ -36,6 +39,7 @@ const EditUser = () => {
       navigate('/users');
     } catch (err) {
       setError('Failed to update user');
+      setDisableButton(false);
     }
   };
 
@@ -43,7 +47,7 @@ const EditUser = () => {
     const { name, value } = e.target;
     setUser((prev) => ({ ...prev, [name]: value }));
   };
-
+  if (loading) return <div>Loading...</div>;
   return (
     <div>
       <h2>Edit User</h2>
@@ -65,7 +69,8 @@ const EditUser = () => {
           <label>Avatar URL:</label>
           <input name="avatar" value={user.avatar} onChange={handleChange} required />
         </div>
-        <button type="submit">Update User</button>
+        {disableButton && <div>Updating...</div>}
+        <button disabled={disableButton} type="submit">{disableButton? <span>Updating...</span>: <span>Update</span>}</button>
       </form>
     </div>
   );
