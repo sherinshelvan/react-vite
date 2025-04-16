@@ -1,6 +1,6 @@
 import React from 'react';
 import { useNavigate, useLocation, Link } from 'react-router-dom';
-import '/public/assets/vendor/css/pages/page-misc.css';
+import '../../assets/css/page-misc.css';
 
 const NotFound = () => {
   return (

@@ -3,7 +3,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { setToken, isAuthenticated } from '../../utils/auth.js'; // Utility to save token
-import '/public/assets/css/page-auth.css';
+import '../../assets/css/page-auth.css';
 
 const Login = () => {
   const [username, setUsername] = useState('john@mail.com');
