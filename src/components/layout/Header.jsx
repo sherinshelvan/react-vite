@@ -13,11 +13,11 @@ const Header = () => {
 
   return (
     <header className="header">
-      <nav>
+      {/* <nav>
         <Link to="/dashboard">Dashboard</Link> |{' '}
         <Link to="/users">Users</Link> |{' '}
         <button onClick={handleLogout}>Logout</button>
-      </nav>
+      </nav> */}
     </header>
   );
 };
